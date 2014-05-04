@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<matrix-project>
+<matrix-project plugin="matrix-project@1.0-beta-1">
   <actions/>
   <description>Astropy upstream master on MacOS 10.8</description>
   <logRotator class="hudson.tasks.LogRotator">
@@ -10,12 +10,10 @@
   </logRotator>
   <keepDependencies>false</keepDependencies>
   <properties/>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@1.5.0">
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.2.1">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <name></name>
-        <refspec></refspec>
         <url>https://github.com/astropy/astropy.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
@@ -24,28 +22,16 @@
         <name>master</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
-    <disableSubmodules>false</disableSubmodules>
-    <recursiveSubmodules>false</recursiveSubmodules>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-    <authorOrCommitter>false</authorOrCommitter>
-    <clean>true</clean>
-    <wipeOutWorkspace>true</wipeOutWorkspace>
-    <pruneBranches>false</pruneBranches>
-    <remotePoll>false</remotePoll>
-    <ignoreNotifyCommit>false</ignoreNotifyCommit>
-    <useShallowClone>false</useShallowClone>
-    <buildChooser class="hudson.plugins.git.util.DefaultBuildChooser"/>
-    <gitTool>Default</gitTool>
+    <browser class="hudson.plugins.git.browser.FisheyeGitRepositoryBrowser">
+      <url></url>
+    </browser>
     <submoduleCfg class="list"/>
-    <relativeTargetDir></relativeTargetDir>
-    <reference></reference>
-    <excludedRegions></excludedRegions>
-    <excludedUsers></excludedUsers>
-    <gitConfigName></gitConfigName>
-    <gitConfigEmail></gitConfigEmail>
-    <skipTag>false</skipTag>
-    <includedRegions></includedRegions>
-    <scmName></scmName>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.PerBuildTag/>
+      <hudson.plugins.git.extensions.impl.CleanCheckout/>
+      <hudson.plugins.git.extensions.impl.WipeWorkspace/>
+    </extensions>
   </scm>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -68,7 +54,7 @@
         <string>1.6.2</string>
         <string>1.7.0</string>
         <string>1.7.1</string>
-        <string>1.8.0</string>
+        <string>1.8.1</string>
       </values>
     </hudson.matrix.TextAxis>
     <hudson.matrix.TextAxis>
@@ -79,20 +65,20 @@
         <string>3.1</string>
         <string>3.2</string>
         <string>3.3</string>
+        <string>3.4</string>
       </values>
     </hudson.matrix.TextAxis>
   </axes>
-  <combinationFilter>!(PV == &quot;3.3&quot; &amp;&amp; NV[2] == &quot;5&quot;) &amp;&amp; !(PV == &quot;3.3&quot; &amp;&amp; NV[2] == &quot;6&quot;) &amp;&amp; !(PV == &quot;3.1&quot; &amp;&amp; NV[2] == &quot;8&quot;)</combinationFilter>
   <builders>
     <hudson.tasks.Shell>
-      <command>$HOME/virtualenvs/astropy.dev/python$PV-numpy$NV/bin/python setup.py build</command>
+      <command>/Users/Shared/Jenkins/virtualenvs/astropy/python$PV-numpy$NV/bin/python setup.py build</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
-      <command>PYTHONIOENCODING=UTF8 $HOME/virtualenvs/astropy.dev/python$PV-numpy$NV/bin/python setup.py test -a &quot;--junitxml=$PWD/junit.xml --confcutdir=../../&quot;</command>
+      <command>PYTHONIOENCODING=UTF8 /Users/Shared/Jenkins/virtualenvs/astropy/python$PV-numpy$NV/bin/python setup.py test -a &quot;--junitxml=$PWD/junit.xml --confcutdir=../../&quot;</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
-    <hudson.plugins.warnings.WarningsPublisher plugin="warnings@4.35">
+    <hudson.plugins.warnings.WarningsPublisher plugin="warnings@4.40">
       <healthy></healthy>
       <unHealthy></unHealthy>
       <thresholdLimit>low</thresholdLimit>
@@ -101,7 +87,7 @@
       <canRunOnFailed>false</canRunOnFailed>
       <useStableBuildAsReference>false</useStableBuildAsReference>
       <useDeltaValues>false</useDeltaValues>
-      <thresholds plugin="analysis-core@1.54">
+      <thresholds plugin="analysis-core@1.56">
         <unstableTotalAll></unstableTotalAll>
         <unstableTotalHigh></unstableTotalHigh>
         <unstableTotalNormal></unstableTotalNormal>
@@ -117,7 +103,7 @@
       <parserConfigurations/>
       <consoleParsers>
         <hudson.plugins.warnings.ConsoleParser>
-          <parserName>GNU Compiler 4 (gcc)</parserName>
+          <parserName>GNU C Compiler 4 (gcc)</parserName>
         </hudson.plugins.warnings.ConsoleParser>
       </consoleParsers>
     </hudson.plugins.warnings.WarningsPublisher>
@@ -126,8 +112,7 @@
       <keepLongStdio>false</keepLongStdio>
       <testDataPublishers/>
     </hudson.tasks.junit.JUnitResultArchiver>
-    <xunit plugin="xunit@1.61">
-      <types/>
+    <xunit plugin="xunit@1.84">
       <thresholds>
         <org.jenkinsci.plugins.xunit.threshold.FailedThreshold>
           <unstableThreshold></unstableThreshold>
@@ -143,6 +128,9 @@
         </org.jenkinsci.plugins.xunit.threshold.SkippedThreshold>
       </thresholds>
       <thresholdMode>1</thresholdMode>
+      <extraConfiguration>
+        <testTimeMargin>3000</testTimeMargin>
+      </extraConfiguration>
     </xunit>
     <hudson.plugins.violations.ViolationsPublisher plugin="violations@0.7.11">
       <config>
@@ -331,7 +319,7 @@
         <encoding>default</encoding>
       </config>
     </hudson.plugins.violations.ViolationsPublisher>
-    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.34">
+    <hudson.plugins.emailext.ExtendedEmailPublisher plugin="email-ext@2.37.2.2">
       <recipientList>thomas.robitaille@gmail.com</recipientList>
       <configuredTriggers>
         <hudson.plugins.emailext.plugins.trigger.FailureTrigger>
@@ -378,7 +366,7 @@
       <saveOutput>false</saveOutput>
       <matrixTriggerMode>ONLY_PARENT</matrixTriggerMode>
     </hudson.plugins.emailext.ExtendedEmailPublisher>
-    <hudson.plugins.build__publisher.BuildPublisher plugin="build-publisher@1.17">
+    <hudson.plugins.build__publisher.BuildPublisher plugin="build-publisher@1.18">
       <publishUnstableBuilds>true</publishUnstableBuilds>
       <publishFailedBuilds>true</publishFailedBuilds>
       <postActions class="vector"/>

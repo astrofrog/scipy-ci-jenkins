@@ -1,0 +1,8 @@
+virtualenvs/astropy/python*
+virtualenvs/astropy/numpy*
+*.log
+*builds
+*configurations
+*lastStable
+*lastSuccessful
+

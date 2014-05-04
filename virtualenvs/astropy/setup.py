@@ -5,8 +5,8 @@ import subprocess
 from copy import deepcopy
 from distutils import version
 
-NUMPY_VERSIONS = ['1.4.1', '1.5.0', '1.5.1', '1.6.0', '1.6.1', '1.6.2', '1.7.0', '1.7.1']
-PYTHON_VERSIONS = ['2.6', '2.7', '3.1', '3.2', '3.3']
+NUMPY_VERSIONS = ['1.4.1', '1.5.0', '1.5.1', '1.6.0', '1.6.1', '1.6.2', '1.7.0', '1.7.1', '1.8.0', '1.8.1'][-1:]
+PYTHON_VERSIONS = ['2.6', '2.7', '3.1', '3.2', '3.3', '3.4']
 
 NUMPY_URL = "https://pypi.python.org/packages/source/n/numpy/numpy-{nv}.tar.gz"
 
@@ -23,11 +23,13 @@ for nv in NUMPY_VERSIONS:
 
 
 SCRIPT = """
+export PATH=/opt/local/bin:$PATH
+
 # Create virtual environment
-$HOME/usr/python/bin/virtualenv-{pv} --python=$HOME/usr/python/bin/python{pv} --no-site-packages --distribute {full}
+/opt/local/bin/virtualenv-{pv} -v {full}
 
 # Install Cython
-{full}/bin/pip-{pv} install Cython
+{full}/bin/pip install Cython
 
 # Unpack Numpy to temporary directory
 mkdir {full}.tmp
@@ -37,9 +39,8 @@ tar -C {full}.tmp -xvzf numpy-{nv}.tar.gz
 cd {full}.tmp/numpy-{nv}/
 
 # Build Numpy
-# FFLAGS="-m64" ../{full}/bin/python{pv} setup.py build --fcompiler=gnu95'.format(**versions)
 CC={cc} ../../{full}/bin/python{pv} setup.py build
-../../{full}/bin/python{pv} setup.py install
+CC={cc} ../../{full}/bin/python{pv} setup.py install
 
 # Back to start
 cd ../../
@@ -53,7 +54,7 @@ def setup_virtualenv(versions):
 
     print versions['full']
 
-    f = open('{full}.log'.format(**versions), 'wb')
+    f = open('{full}.log'.format(**versions), 'w')
     code = subprocess.call(SCRIPT.format(**versions), shell=True, stdout=f, stderr=f)
     f.close()
 
@@ -63,10 +64,10 @@ versions = {}
 for numpy_version in NUMPY_VERSIONS:
     versions['nv'] = numpy_version
     for python_version in PYTHON_VERSIONS:
-        if python_version in ['3.1', '3.2', '3.3']:
+        if python_version in ['3.1', '3.2', '3.3', '3.4']:
             if numpy_version == '1.4.1':
                 continue
-        if python_version in ['3.3']:
+        if python_version in ['3.3', '3.4']:
             if version.LooseVersion(numpy_version) < version.LooseVersion("1.7.0"):
                 continue
         versions['pv'] = python_version
@@ -74,10 +75,10 @@ for numpy_version in NUMPY_VERSIONS:
         if version.LooseVersion(numpy_version) >= version.LooseVersion("1.6.2"):
             versions['cc'] = 'clang'
         else:
-            versions['cc'] = 'gcc'
+            versions['cc'] = '/opt/local/bin/gcc-apple-4.2'
 
         all_versions.append(deepcopy(versions))
 
 from multiprocessing import Pool
-p = Pool(processes=24)
+p = Pool(processes=4)
 p.map(setup_virtualenv, all_versions)

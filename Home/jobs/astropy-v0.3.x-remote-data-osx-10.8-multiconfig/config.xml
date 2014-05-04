@@ -81,13 +81,12 @@
       </values>
     </hudson.matrix.TextAxis>
   </axes>
-  <combinationFilter>!(PV == &quot;3.3&quot; &amp;&amp; NV[2] == &quot;5&quot;) &amp;&amp; !(PV == &quot;3.3&quot; &amp;&amp; NV[2] == &quot;6&quot;) &amp;&amp; !(PV == &quot;3.1&quot; &amp;&amp; NV[2] == &quot;8&quot;)</combinationFilter>
   <builders>
     <hudson.tasks.Shell>
-      <command>$HOME/virtualenvs/astropy.dev/python$PV-numpy$NV/bin/python setup.py build</command>
+      <command>/Users/Shared/Jenkins/virtualenvs/astropy/python$PV-numpy$NV/bin/python setup.py build</command>
     </hudson.tasks.Shell>
     <hudson.tasks.Shell>
-      <command>PYTHONIOENCODING=UTF8 $HOME/virtualenvs/astropy.dev/python$PV-numpy$NV/bin/python setup.py test -a &quot;--junitxml=$PWD/junit.xml --confcutdir=../../&quot; --remote-data</command>
+      <command>PYTHONIOENCODING=UTF8 /Users/Shared/Jenkins/virtualenvs/astropy/python$PV-numpy$NV/bin/python setup.py test -a &quot;--junitxml=$PWD/junit.xml --confcutdir=../../&quot; --remote-data</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>

@@ -1,15 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<matrix-project>
+<matrix-project plugin="matrix-project@1.0-beta-1">
   <actions/>
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties/>
-  <scm class="hudson.plugins.git.GitSCM" plugin="git@1.5.0">
+  <scm class="hudson.plugins.git.GitSCM" plugin="git@2.2.1">
     <configVersion>2</configVersion>
     <userRemoteConfigs>
       <hudson.plugins.git.UserRemoteConfig>
-        <name></name>
-        <refspec></refspec>
         <url>https://github.com/numpy/numpy.git</url>
       </hudson.plugins.git.UserRemoteConfig>
     </userRemoteConfigs>
@@ -18,28 +16,11 @@
         <name>master</name>
       </hudson.plugins.git.BranchSpec>
     </branches>
-    <disableSubmodules>false</disableSubmodules>
-    <recursiveSubmodules>false</recursiveSubmodules>
     <doGenerateSubmoduleConfigurations>false</doGenerateSubmoduleConfigurations>
-    <authorOrCommitter>false</authorOrCommitter>
-    <clean>false</clean>
-    <wipeOutWorkspace>false</wipeOutWorkspace>
-    <pruneBranches>false</pruneBranches>
-    <remotePoll>false</remotePoll>
-    <ignoreNotifyCommit>false</ignoreNotifyCommit>
-    <useShallowClone>false</useShallowClone>
-    <buildChooser class="hudson.plugins.git.util.DefaultBuildChooser"/>
-    <gitTool>Default</gitTool>
     <submoduleCfg class="list"/>
-    <relativeTargetDir></relativeTargetDir>
-    <reference></reference>
-    <excludedRegions></excludedRegions>
-    <excludedUsers></excludedUsers>
-    <gitConfigName></gitConfigName>
-    <gitConfigEmail></gitConfigEmail>
-    <skipTag>false</skipTag>
-    <includedRegions></includedRegions>
-    <scmName></scmName>
+    <extensions>
+      <hudson.plugins.git.extensions.impl.PerBuildTag/>
+    </extensions>
   </scm>
   <canRoam>true</canRoam>
   <disabled>false</disabled>
@@ -60,17 +41,18 @@
         <string>2.7</string>
         <string>3.2</string>
         <string>3.3</string>
+        <string>3.4</string>
       </values>
     </hudson.matrix.TextAxis>
   </axes>
   <builders>
     <hudson.tasks.Shell>
-      <command>$HOME/virtualenvs/astropy.dev/python$PV-numpy-dev/bin/python setup.py install</command>
+      <command>/Users/Shared/Jenkins/virtualenvs/astropy/python$PV-numpy-dev/bin/python setup.py install</command>
     </hudson.tasks.Shell>
   </builders>
   <publishers>
     <hudson.tasks.BuildTrigger>
-      <childProjects>astropy-master-numpydev-osx-10.8-multiconfig, astropy-v0.2.x-numpydev-osx-10.8-multiconfig</childProjects>
+      <childProjects>astropy-master-numpydev-osx-10.8-multiconfig, astropy-v0.2.x-numpydev-osx-10.8-multiconfig, astropy-v0.3.x-numpydev-osx-10.8-multiconfig</childProjects>
       <threshold>
         <name>SUCCESS</name>
         <ordinal>0</ordinal>
